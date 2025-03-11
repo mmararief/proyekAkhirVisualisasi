@@ -234,14 +234,33 @@ with tab3:
     factor = st.selectbox("Pilih Faktor Lingkungan:", ["temp", "hum", "windspeed"])
     factor_labels = {"temp": "Suhu", "hum": "Kelembaban", "windspeed": "Kecepatan Angin"}
     
-    fig = px.scatter(
-        filtered_day_df, 
-        x=factor, 
-        y="cnt",
-        trendline="ols",
-        labels={factor: factor_labels[factor], "cnt": "Total Penyewaan"},
-        title=f"Hubungan antara {factor_labels[factor]} dan Penyewaan Sepeda"
-    )
+    # Check if statsmodels is available
+    try:
+        import statsmodels.api as sm
+        has_statsmodels = True
+    except ImportError:
+        has_statsmodels = False
+    
+    # Create scatter plot with or without trendline
+    if has_statsmodels:
+        fig = px.scatter(
+            filtered_day_df, 
+            x=factor, 
+            y="cnt",
+            trendline="ols",
+            labels={factor: factor_labels[factor], "cnt": "Total Penyewaan"},
+            title=f"Hubungan antara {factor_labels[factor]} dan Penyewaan Sepeda"
+        )
+    else:
+        fig = px.scatter(
+            filtered_day_df, 
+            x=factor, 
+            y="cnt",
+            labels={factor: factor_labels[factor], "cnt": "Total Penyewaan"},
+            title=f"Hubungan antara {factor_labels[factor]} dan Penyewaan Sepeda"
+        )
+        st.info("Catatan: Garis tren regresi tidak ditampilkan karena package statsmodels tidak tersedia.")
+    
     st.plotly_chart(fig, use_container_width=True)
     
     st.markdown("<div class='insight-box'><b>Insight:</b> Suhu memiliki korelasi positif yang kuat dengan penyewaan sepeda, sedangkan kelembaban memiliki korelasi negatif ringan.</div>", unsafe_allow_html=True)
