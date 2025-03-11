@@ -30,6 +30,8 @@ st.markdown("""
         padding: 15px;
         border-radius: 5px;
         border-left: 5px solid #1E88E5;
+        color: #000000;
+        font-weight: 500;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -159,7 +161,7 @@ with tab1:
     fig2.update_layout(xaxis_title="Tanggal", yaxis_title="Total Penyewaan")
     st.plotly_chart(fig2, use_container_width=True)
     
-    st.markdown("<div class='insight-box'><b>Insight:</b> Penyewaan sepeda paling tinggi terjadi pada musim gugur, sedangkan musim semi memiliki penyewaan paling rendah.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='insight-box'><b style='font-size: 1.1rem; color: #0D47A1;'>Insight:</b> Penyewaan sepeda paling tinggi terjadi pada musim gugur, sedangkan musim semi memiliki penyewaan paling rendah.</div>", unsafe_allow_html=True)
 
 with tab2:
     st.markdown("<h2 class='subheader'>Tren Penyewaan Berdasarkan Jam dalam Sehari</h2>", unsafe_allow_html=True)
@@ -214,7 +216,7 @@ with tab2:
         )
         st.plotly_chart(fig_heatmap, use_container_width=True)
     
-    st.markdown("<div class='insight-box'><b>Insight:</b> Jam sibuk utama adalah pukul 07:00 - 09:00 dan 17:00 - 19:00, menunjukkan bahwa sepeda digunakan untuk perjalanan kerja/sekolah.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='insight-box'><b style='font-size: 1.1rem; color: #0D47A1;'>Insight:</b> Jam sibuk utama adalah pukul 07:00 - 09:00 dan 17:00 - 19:00, menunjukkan bahwa sepeda digunakan untuk perjalanan kerja/sekolah.</div>", unsafe_allow_html=True)
 
 with tab3:
     st.markdown("<h2 class='subheader'>Korelasi Penyewaan Sepeda dengan Faktor Lingkungan</h2>", unsafe_allow_html=True)
@@ -263,7 +265,7 @@ with tab3:
     
     st.plotly_chart(fig, use_container_width=True)
     
-    st.markdown("<div class='insight-box'><b>Insight:</b> Suhu memiliki korelasi positif yang kuat dengan penyewaan sepeda, sedangkan kelembaban memiliki korelasi negatif ringan.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='insight-box'><b style='font-size: 1.1rem; color: #0D47A1;'>Insight:</b> Suhu memiliki korelasi positif yang kuat dengan penyewaan sepeda, sedangkan kelembaban memiliki korelasi negatif ringan.</div>", unsafe_allow_html=True)
 
 with tab4:
     st.markdown("<h2 class='subheader'>Kesimpulan & Rekomendasi</h2>", unsafe_allow_html=True)
