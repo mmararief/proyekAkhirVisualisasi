@@ -3,56 +3,61 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load dataset
+# Load Data
 day_df = pd.read_csv("data/day.csv")
 hour_df = pd.read_csv("data/hour.csv")
 
-# Dashboard Title
-st.title("Bike Sharing Data Analysis")
+# Streamlit Title
+st.title("Analisis Penyewaan Sepeda")
+st.write("Laporan interaktif tentang tren penyewaan sepeda berdasarkan musim, jam dalam sehari, dan faktor lingkungan.")
 
-# Sidebar
-st.sidebar.header("Filter Data")
-season_filter = st.sidebar.selectbox("Select Season", ["All"] + list(day_df["season"].unique()))
+# Visualisasi Pengaruh Musim terhadap Penyewaan Sepeda
+st.header("Pengaruh Musim terhadap Penyewaan Sepeda")
+avg_rent_by_season = day_df.groupby("season")["cnt"].mean()
 
-# Filter Data
-if season_filter != "All":
-    filtered_data = day_df[day_df["season"] == season_filter]
-else:
-    filtered_data = day_df
+fig, ax = plt.subplots()
+ax.bar(["Spring", "Summer", "Fall", "Winter"], avg_rent_by_season, color=['blue', 'orange', 'green', 'red'])
+ax.set_ylabel("Rata-rata Penyewaan Sepeda")
+ax.set_xlabel("Musim")
+ax.set_title("Rata-rata Penyewaan Sepeda per Musim")
+st.pyplot(fig)
 
-# Show Dataset
-st.subheader("Dataset Preview")
-st.write(filtered_data.head())
+st.write("**Insight:** Penyewaan sepeda paling tinggi terjadi pada musim gugur, sedangkan musim semi memiliki penyewaan paling rendah.")
 
-# # Visualization 1: Bike Rentals Over Time
-# st.subheader("Bike Rentals Over Time")
-# plt.figure(figsize=(10, 5))
-# sns.lineplot(x=filtered_data["dteday"], y=filtered_data["cnt"], marker="o")
-# plt.xticks(rotation=45)
-# plt.xlabel("Date")
-# plt.ylabel("Total Rentals")
-# plt.title("Daily Bike Rentals Trend")
-# st.pyplot(plt)
+# Visualisasi Tren Penyewaan Berdasarkan Jam dalam Sehari
+st.header("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari")
+avg_rent_by_hour = hour_df.groupby("hr")["cnt"].mean()
 
-# Visualization 2: Bike Rentals by Weather
-st.subheader("Bike Rentals by Weather Condition")
-plt.figure(figsize=(8, 5))
-sns.boxplot(x=filtered_data["weathersit"], y=filtered_data["cnt"])
-plt.xlabel("Weather Condition")
-plt.ylabel("Total Rentals")
-plt.title("Distribution of Bike Rentals Based on Weather")
-st.pyplot(plt)
+fig, ax = plt.subplots()
+ax.plot(avg_rent_by_hour.index, avg_rent_by_hour.values, marker='o', linestyle='-', color='purple')
+ax.set_xticks(range(0, 24))
+ax.set_ylabel("Rata-rata Penyewaan Sepeda")
+ax.set_xlabel("Jam dalam Sehari")
+ax.set_title("Pola Penyewaan Sepeda berdasarkan Jam")
+st.pyplot(fig)
 
-# Additional Analysis: Rentals by Hour
-st.subheader("Bike Rentals by Hour of the Day")
-plt.figure(figsize=(10, 5))
-sns.lineplot(x=hour_df["hr"], y=hour_df["cnt"], marker="o")
-plt.xlabel("Hour of the Day")
-plt.ylabel("Total Rentals")
-plt.title("Hourly Bike Rental Trend")
-st.pyplot(plt)
+st.write("**Insight:** Jam sibuk utama adalah pukul 07:00 - 09:00 dan 17:00 - 19:00, menunjukkan bahwa sepeda digunakan untuk perjalanan kerja/sekolah.")
 
-# Conclusion
-st.subheader("Conclusions")
-st.write("1. Weather conditions have an impact on the number of rentals.")
-st.write("2. Bike rentals peak during specific hours of the day, indicating user preferences.")
+# Korelasi dengan Faktor Lingkungan
+st.header("Korelasi Penyewaan Sepeda dengan Faktor Lingkungan")
+corr_matrix = day_df[["temp", "hum", "windspeed", "cnt"]].corr()
+
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+st.pyplot(fig)
+
+st.write("**Insight:** Suhu memiliki korelasi positif yang kuat dengan penyewaan sepeda, sedangkan kelembaban memiliki korelasi negatif ringan.")
+
+# Kesimpulan
+st.header("Kesimpulan & Rekomendasi")
+st.markdown("""
+- **Musim gugur memiliki penyewaan tertinggi**, sementara **musim semi memiliki penyewaan terendah**.
+- **Jam sibuk utama adalah pagi (07:00 - 09:00) dan sore (17:00 - 19:00)**, menunjukkan penggunaan sebagai transportasi harian.
+- **Suhu memiliki pengaruh kuat terhadap penyewaan**, sedangkan kelembaban dan kecepatan angin tidak terlalu signifikan.
+
+### **Rekomendasi Bisnis:**
+✅ Fokus promosi pada musim semi dengan diskon atau insentif tambahan.
+✅ Optimalkan jumlah sepeda yang tersedia di musim gugur dan pada jam sibuk.
+✅ Sediakan perlengkapan tambahan seperti jas hujan untuk meningkatkan kenyamanan di musim hujan.
+✅ Sesuaikan strategi harga untuk meningkatkan penyewaan di luar jam sibuk.
+""")
